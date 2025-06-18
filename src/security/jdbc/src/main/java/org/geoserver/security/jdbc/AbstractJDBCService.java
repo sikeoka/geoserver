@@ -5,7 +5,6 @@
  */
 package org.geoserver.security.jdbc;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -22,7 +21,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.io.FileUtils;
-import org.geoserver.platform.resource.Files;
 import org.geoserver.platform.resource.Resource;
 import org.geoserver.platform.resource.Resources;
 import org.geoserver.security.config.SecurityNamedServiceConfig;
@@ -340,16 +338,8 @@ public abstract class AbstractJDBCService extends AbstractGeoServerSecurityServi
      */
     protected Resource checkORCreateJDBCPropertyFile(String fileName, Resource namedRoot, String defaultResource)
             throws IOException {
-
-        Resource resource;
         fileName = fileName != null ? fileName : defaultResource;
-        File file = new File(fileName);
-        if (file.isAbsolute()) {
-            resource = Files.asResource(file);
-        } else {
-            resource = namedRoot.get(fileName);
-        }
-
+        Resource resource = getFileResource(namedRoot, fileName);
         if (Resources.exists(resource)) {
             return resource; // we are happy
         }
@@ -358,7 +348,7 @@ public abstract class AbstractJDBCService extends AbstractGeoServerSecurityServi
         try (InputStream is = this.getClass().getResourceAsStream(fileName)) {
             if (is != null) IOUtils.copy(is, resource.out());
             else // use the default template
-            FileUtils.copyURLToFile(getClass().getResource(defaultResource), file);
+            FileUtils.copyURLToFile(getClass().getResource(defaultResource), resource.file());
         }
 
         return resource;

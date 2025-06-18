@@ -5,7 +5,6 @@
  */
 package org.geoserver.security.xml;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,7 +17,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import org.geoserver.platform.resource.Files;
 import org.geoserver.platform.resource.Resource;
 import org.geoserver.platform.resource.Resource.Type;
 import org.geoserver.security.GeoServerRoleStore;
@@ -71,14 +69,7 @@ public class XMLRoleService extends AbstractRoleService {
 
         if (config instanceof FileBasedSecurityServiceConfig) {
             String fileName = ((FileBasedSecurityServiceConfig) config).getFileName();
-
-            File roleFile = new File(fileName);
-            if (roleFile.isAbsolute()) {
-                roleResource = Files.asResource(roleFile);
-            } else {
-                roleResource = getConfigRoot().get(fileName);
-            }
-
+            roleResource = getFileResource(getConfigRoot(), fileName);
             if (roleResource.getType() == Type.UNDEFINED) {
                 IOUtils.copy(getClass().getResourceAsStream("rolesTemplate.xml"), roleResource.out());
             }

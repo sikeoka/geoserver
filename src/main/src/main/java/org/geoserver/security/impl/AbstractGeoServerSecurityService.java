@@ -5,8 +5,11 @@
  */
 package org.geoserver.security.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+import org.geoserver.platform.resource.Files;
+import org.geoserver.platform.resource.Resource;
 import org.geoserver.security.GeoServerSecurityManager;
 import org.geoserver.security.GeoServerSecurityService;
 import org.geoserver.security.config.SecurityNamedServiceConfig;
@@ -67,5 +70,18 @@ public abstract class AbstractGeoServerSecurityService implements GeoServerSecur
     /** Authentication filters with an {@link AuthenticationEntryPoint} must return their entry point */
     public AuthenticationEntryPoint getAuthenticationEntryPoint() {
         return null;
+    }
+
+    protected Resource getFileResource(Resource root, String fileName) throws IOException {
+        Resource resource;
+        File file = new File(fileName);
+        if (file.isAbsolute()) {
+            resource = Files.asResource(file);
+        } else {
+            resource = root.get(fileName);
+            file = new File(root.dir(), fileName);
+        }
+        getSecurityManager().checkAllowedFile(file, fileName);
+        return resource;
     }
 }

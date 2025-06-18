@@ -2853,12 +2853,39 @@ public class GeoServerSecurityManager implements ApplicationContextAware, Applic
         File file = new File(configFileLocation);
         if (file.isAbsolute()) {
             if (file.canRead()) {
+                checkAllowedFile(file, configFileLocation);
                 return Files.asResource(file); // used by test cases
             } else {
                 throw new IOException("Cannot read file: " + file.getCanonicalPath());
             }
         }
         return null;
+    }
+
+    public void checkAllowedFile(File file, String fileName) throws IOException {
+        String allowedPaths = GeoServerExtensions.getProperty("GS_SECURITY_DIRS");
+        if (allowedPaths == null) {
+            allowedPaths = "";
+        }
+        if (allowedPaths.equals("*")) {
+            // special value to allow all file paths
+            return;
+        }
+        // always allow ${GEOSERVER_DATA_DIR}/security
+        allowedPaths += (allowedPaths.isEmpty() ? "" : File.pathSeparator) + "security";
+        File dataDir = get("").dir();
+        String filePath = file.getAbsolutePath();
+        for (String allowedPath : allowedPaths.split(File.pathSeparator)) {
+            File allowedFile = new File(allowedPath);
+            if (!allowedFile.isAbsolute()) {
+                allowedFile = new File(dataDir, allowedPath);
+            }
+            allowedPath = allowedFile.getAbsolutePath();
+            if (filePath.equals(allowedPath) || filePath.startsWith(allowedPath + File.separator)) {
+                return;
+            }
+        }
+        throw new IOException("File '" + fileName + "' is not allowed by the GS_SECURITY_DIRS property");
     }
 
     class PasswordValidatorHelper extends HelperBase<PasswordValidator, PasswordPolicyConfig> {
