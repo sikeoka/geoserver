@@ -30664,7 +30664,7 @@
 <tr>
 <td>allows a template to extend another template</td>
 <td>\$merge</td>
-<td>specify the <code>$merge</code> directive as an attribute name containing the path to the extended template (:code: <code>"\$merged":"base_template.json"</code>).</td>
+<td>specify the <code>$merge</code> directive as an attribute name containing the path to the extended template (<code>"$merged":"base_template.json"</code>).</td>
 </tr>
 <tr>
 <td>allows null values to be encoded. default is not encoded.</td>
@@ -30712,7 +30712,7 @@
 <tr>
 <td>defines options to customize the output outside of a feature scope</td>
 <td>gft:Options</td>
-<td>specify it as an element at the beginning of the xml document after the <code>&lt;gft:Template&gt;</code> one (<code>&lt;gft:Options&gt;&lt;/gft:Options&gt;</code>). GML options: <code>&lt;gtf:Namespaces&gt;</code>,<code>&lt;gtf:SchemaLocation&gt;</code>. HTML options: <code>&lt;script&gt;</code>, :code: <code>&lt;script type="application/ld+json"/&gt;</code>, <code>&lt;style&gt;</code>, :code: <code>&lt;link&gt;</code>.</td>
+<td>specify it as an element at the beginning of the xml document after the <code>&lt;gft:Template&gt;</code> one (<code>&lt;gft:Options&gt;&lt;/gft:Options&gt;</code>). GML options: <code>&lt;gtf:Namespaces&gt;</code>,<code>&lt;gtf:SchemaLocation&gt;</code>. HTML options: <code>&lt;script&gt;</code>, <code>&lt;script type="application/ld+json"/&gt;</code>, <code>&lt;style&gt;</code>, <code>&lt;link&gt;</code>.</td>
 </tr>
 <tr>
 <td>allows including a template into another</td>
@@ -31833,15 +31833,13 @@
 <ul>
 <li>
 <p><code>aggregate</code>: takes as arguments an expression (a property name or a function) that returns a list of values and a literal with the aggregation type eg. <code>aggregate(my.property.name,'MIN')</code>. The supported aggregation type are the following:</p>
-</li>
-<li>
-<p><code>MIN</code> will return the minimum value from a list of numeric values.</p>
-</li>
+<ul>
+<li><code>MIN</code> will return the minimum value from a list of numeric values.</li>
 <li><code>MAX</code> will return the max value from a list of numeric values.</li>
 <li><code>AVG</code> will return the average value from a list of numeric values.</li>
 <li><code>UNIQUE</code> will remove duplicates values from a list of values.</li>
-<li>
-<p><code>JOIN</code> will concatenate the list of values in a single string. It accepts a parameter to specify the separator that by default is blank space: <code>aggregate(my.property.name,'JOIN(,)')</code> .</p>
+<li><code>JOIN</code> will concatenate the list of values in a single string. It accepts a parameter to specify the separator that by default is blank space: <code>aggregate(my.property.name,'JOIN(,)')</code> .</li>
+</ul>
 </li>
 <li>
 <p><code>stream</code>: takes an undefined number of expressions as parameters and chain them so that each expression evaluate on top of the output of the previous expression: eg. <code>stream(aPropertyName,aFunction,anotherPropertyName)</code> while evaluate the <code>aFunction</code> on the output of <code>aPropertyName</code> evaluation and finally <code>anotherPropertyName</code> will evaluate on top of the result of <code>aFunction</code>.</p>
